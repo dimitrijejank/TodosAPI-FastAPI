@@ -74,3 +74,19 @@ The token is sent in the `Authorization` header as a Bearer token on every subse
 Each protected endpoint decodes the token to identify the user and, where relevant, checks their role.
 Notes
 This project was built as a learning exercise, with a focus on understanding how the different parts of FastAPI fit together: routers, dependencies, database sessions, request/response models, and authentication.
+
+## Testing
+
+The project includes automated tests written with pytest, covering authentication, CRUD operations on to-do items, and user profile updates. Tests run against a separate PostgreSQL test database, kept isolated from the main application database.
+
+Database connection strings are loaded from environment variables using `python-dotenv`, so credentials are never hardcoded or committed to the repository.
+
+To run the tests:
+### What's covered
+
+- Reading all to-do items for an authenticated user
+- Reading a single to-do item by id
+- Creating a new to-do item
+- Updating a user's phone number
+
+Test data (users and to-do items) is created and cleaned up using pytest fixtures, ensuring each test run starts from a consistent state and does not leave leftover data in the test database.
