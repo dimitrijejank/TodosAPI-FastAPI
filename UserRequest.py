@@ -7,6 +7,7 @@ class CreateUserRequest(BaseModel):
     last_name: str = Field(min_length=3, max_length=55)
     password:str = Field(min_length=3)
     role: str = Field(min_length=3)
+    phone_number: str = Field(min_length=3, max_length=16)
 
 class Token(BaseModel):
     access_token:str

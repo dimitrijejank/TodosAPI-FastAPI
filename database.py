@@ -1,10 +1,14 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+import os
+from dotenv import load_dotenv
 
-SQLALCEHEMY_URL = "sqlite:///./todosapp.db"
+load_dotenv()
 
-engine = create_engine(SQLALCEHEMY_URL, connect_args={"check_same_thread": False})
+SQLALCEHEMY_URL = os.getenv("DATABASE_URL")
+
+engine = create_engine(SQLALCEHEMY_URL)
 
 SessionLocal = sessionmaker(autoflush=False,autocommit=False, bind=engine)
 
