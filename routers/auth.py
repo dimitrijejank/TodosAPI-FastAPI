@@ -1,5 +1,5 @@
 from datetime import timedelta, datetime, timezone
-from fastapi import APIRouter,Depends, HTTPException
+from fastapi import APIRouter,Depends, HTTPException, Request
 from typing import Annotated
 from starlette import status
 from UserRequest import CreateUserRequest, Token
@@ -9,6 +9,7 @@ from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from jose import jwt, JWTError
+from fastapi.templating import Jinja2Templates
 
 router= APIRouter(
     prefix="/auth",
@@ -17,7 +18,6 @@ router= APIRouter(
 
 SECRET_KEY = "aae821a933648ca9072ab60d03ac2ea2"
 ALGORITHM = "HS256"
-
 
 bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl="auth/token")
@@ -32,6 +32,20 @@ def get_db():
 
 db_dependency = Annotated[Session, Depends(get_db)]
 
+templates = Jinja2Templates(directory="templates")
+
+### Pages ###
+
+@router.get("/login-page")
+def render_login_page(request: Request):
+    return templates.TemplateResponse(request=request, name="login.html", context={})
+
+@router.get("/register-page")
+def render_login_page(request: Request):
+    return templates.TemplateResponse(request=request, name="register.html", context={})
+
+### Functions ###
+
 def authenticate_user(username: str, password: str, db):
     user = db.query(Users).filter(Users.username == username).first()
     if not user:
@@ -45,6 +59,8 @@ def create_access_token(username:str, user_id: int,role: str, expires_delta: tim
     expires = datetime.now(timezone.utc) + expires_delta
     encode.update({"exp": expires})
     return  jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
+
+### Endpoints ###
 
 async def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
     try:
