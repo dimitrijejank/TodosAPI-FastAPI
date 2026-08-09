@@ -46,7 +46,7 @@ async def render_todo_page(request: Request, db: db_dependency):
     except:
         return redirect_to_login()
 
-@router.get("/add-todo-page/{todo_id}")
+@router.get("/add-todo-page")
 async def render_add_todo_page(request: Request):
     try:
         user = await get_current_user(request.cookies.get('access_token'))
